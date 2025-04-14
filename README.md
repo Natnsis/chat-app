@@ -1,4 +1,4 @@
-# Repair Shop with Next.js Application
+# Chat app with Next.js Application
 
 This project is a modern web application designed for managing repair shop operations, built with cutting-edge technologies.
 

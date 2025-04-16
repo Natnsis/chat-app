@@ -15,7 +15,8 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <DesktopNavbar/>
-                
+                <MobileNavbar/>
+                  
             </div>
         </div>
     </nav>

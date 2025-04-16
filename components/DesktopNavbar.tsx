@@ -4,7 +4,7 @@ import { ModeToggle } from './ModeToggle';
 import { Button } from './ui/button';
 import Link from 'next/link';
 import { BellIcon, HomeIcon, UserIcon } from 'lucide-react';
-import { SignInButton } from '@clerk/nextjs';
+import { SignInButton, UserButton } from '@clerk/nextjs';
 
 async function DesktopNavbar() {
     const  user  = await currentUser();
@@ -35,11 +35,13 @@ async function DesktopNavbar() {
               <span className='hidden  lg:inline'>Profile</span>
             </Link>
           </Button>
+          <UserButton/>
         </>
       ):(
           <SignInButton mode="modal">
             <Button variant="default">SignIn</Button>
           </SignInButton>
+          
       )}
     </div>
   )

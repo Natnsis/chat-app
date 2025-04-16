@@ -39,7 +39,7 @@ export default function RootLayout({
         <div className="h-min-screen">
           <Navbar/>
           <main className="py-8">
-            {/* containers */}
+            {/* containers to center content */}
             <div className="max-w-7xl mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* left side */}

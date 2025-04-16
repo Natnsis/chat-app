@@ -41,12 +41,13 @@ export default function RootLayout({
           <main className="py-8">
             {/* containers */}
             <div className="max-w-7xl mx-auto px-4">
-              <div className="grid grid-cols-1 lg:grid-12 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* left side */}
                 <div className="hidden lg:block lg:col-span-3">
-                  sidebar
+                  <div className="">Sidebar</div>
                 </div>
-                <div className="lg:col-span-9 ">{children}</div>
+                {/* main content */}
+                <div className="lg:col-span-9">{children}</div>
               </div>
             </div>
           </main>

@@ -1,5 +1,6 @@
 import { Menu, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
+import Button from "./components/Button";
 
 const App = () => {
   return (
@@ -30,13 +31,7 @@ const App = () => {
         </p>
       </div>
 
-      <div className="mt-10 flex justify-center items-center">
-        <Link to="/login">
-          <button className="bg-accent text-white font-bold rounded-full px-6 py-3 active:scale-95 transition duration:300">
-            Get Started
-          </button>
-        </Link>
-      </div>
+      <Button text="Get Started" link="login" />
     </div>
   );
 };

@@ -5,11 +5,13 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import App from "./App";
+import RegisterPage from "./pages/RegisterPage";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/home", element: <HomePage /> },
   { path: "/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
   { path: "/profile", element: <ProfilePage /> },
 ]);
 

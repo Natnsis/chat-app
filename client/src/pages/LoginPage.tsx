@@ -1,6 +1,7 @@
 import { Mail, MessageSquare, Lock } from "lucide-react";
 import Button from "../components/Button";
 import { Link } from "react-router-dom";
+import Input from "../components/Input";
 
 const LoginPage = () => {
   const onSubmit = () => {};
@@ -15,22 +16,8 @@ const LoginPage = () => {
             Welcome Back!
           </h1>
         </div>
-        <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5">
-          <Mail className="text-secondary" />
-          <input
-            type="text"
-            placeholder="example@gmail.com"
-            className="outline-none placeholder-text"
-          />
-        </div>
-        <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5">
-          <Lock className="text-secondary" />
-          <input
-            type="password"
-            placeholder="password123"
-            className="outline-none placeholder-text "
-          />
-        </div>
+        <Input placeholder="example@gmail.com" type="text" Icon={Mail} />
+        <Input type="password" placeholder="password123" Icon={Lock} />
 
         <Button text="Sign In" onClick={onSubmit} styles="" />
         <p className="text-center">

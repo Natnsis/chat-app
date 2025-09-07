@@ -1,6 +1,7 @@
-import { Mail, MessageSquare, Lock } from "lucide-react";
+import { Mail, MessageSquare, Lock, UserPen } from "lucide-react";
 import Button from "../components/Button";
 import { Link } from "react-router-dom";
+import Input from "../components/Input";
 
 const RegisterPage = () => {
   const onSubmit = () => {};
@@ -15,22 +16,10 @@ const RegisterPage = () => {
             Create Your Account
           </h1>
         </div>
-        <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5">
-          <Mail className="text-secondary" />
-          <input
-            type="text"
-            placeholder="example@gmail.com"
-            className="outline-none placeholder-text"
-          />
-        </div>
-        <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5">
-          <Lock className="text-secondary" />
-          <input
-            type="password"
-            placeholder="password123"
-            className="outline-none placeholder-text "
-          />
-        </div>
+        <Input placeholder="John doe" type="text" Icon={UserPen} />
+        <Input placeholder="example@gmail.com" type="text" Icon={Mail} />
+        <Input type="password" placeholder="password123" Icon={Lock} />
+
         <div className="flex flex-col space-y-2">
           <label className="text-text">Select Profile Image</label>
           <div className="flex items-center space-x-4">

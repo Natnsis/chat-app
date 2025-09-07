@@ -12,7 +12,9 @@
   --color-accent: #f25f29;
   --color-background: #f9f9f9;
   --color-text: #1e1e1e;
-  --color-online: #3a86ff;
+  --color-lightText: #c4c7cc;
+  --color-online: #2ecc71;
+  --color-chat: #f4f4f5;
 }
 
 @layer {

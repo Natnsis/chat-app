@@ -13,7 +13,7 @@ const Button = ({ styles, link, text, onClick }: ButtonProps) => {
           <button
             className={`bg-accent text-white font-bold rounded-full px-6 py-3 active:scale-95 transition duration:300 ${styles}`}
           >
-            {text}
+            {text ? text : null}
           </button>
         </Link>
       </div>

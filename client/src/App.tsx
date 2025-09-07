@@ -11,6 +11,14 @@ const App = () => {
           <MessageSquare className="h-6 w-6" strokeWidth="2.5" />
           <h1 className="text-2xl font-extrabold">Chatter</h1>
         </div>
+        <div className="hidden md:flex items-center gap-3">
+          <Link to="/login" className="text-text font-bold">
+            Login
+          </Link>{" "}
+          <Link to="/register" className="text-text font-bold">
+            Register
+          </Link>
+        </div>
         <div className="md:hidden">
           <Menu strokeWidth={2.5} />
         </div>

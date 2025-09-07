@@ -6,8 +6,8 @@ import Input from "../components/Input";
 const LoginPage = () => {
   const onSubmit = () => {};
   return (
-    <div className="bg-secondary h-screen flex justify-center items-center px-10">
-      <div className="bg-background p-5 rounded-lg w-full flex flex-col gap-2">
+    <div className="bg-secondary h-screen flex justify-center items-center px-10 ">
+      <div className="bg-background p-5 rounded-lg w-full flex flex-col gap-2 md:w-[60%] lg:w-[70%]">
         <div className="flex justify-center">
           <MessageSquare className="h-10 w-10 text-primary" strokeWidth="2.5" />
         </div>

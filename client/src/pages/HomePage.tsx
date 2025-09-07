@@ -7,6 +7,7 @@ import Profile from "./Profile";
 const HomePage = () => {
   const [chat, setChat] = useState<boolean>(true);
   const [messageStyle, setMessageStyle] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
 
   const person = [
     { id: 1, src: "./people/aMan.png", alt: "userImga", name: "Natnael" },
@@ -25,42 +26,49 @@ const HomePage = () => {
       id: 1,
       sender: "me",
       message: "hi there i was here for some chat",
+      status: "active",
     },
     {
       id: 2,
 
       sender: "no",
       message: "hi there i was here for some chat",
+      status: "active",
     },
     {
       id: 3,
 
       sender: "me",
       message: "hi there i was here for some chat",
+      status: "active",
     },
     {
       id: 4,
 
       sender: "no",
       message: "hi there i was here for some chat",
+      status: "active",
     },
     {
       id: 5,
 
       sender: "me",
       message: "hi there i was here for some chat",
+      status: "active",
     },
     {
       id: 6,
 
       sender: "no",
       message: "hi there i was here for some chat",
+      status: "active",
     },
     {
       id: 7,
 
       sender: "no",
       message: "hi there i was here for some chat",
+      status: "active",
     },
   ];
 
@@ -72,10 +80,10 @@ const HomePage = () => {
         </div>
 
         {/* userLists */}
-        <div className="bg-tertiary  flex-col justify-center items-center overflow-y-scroll scroller-hide h-[calc(100vh-100px)]">
+        <div className="bg-tertiary  flex-col justify-center items-center overflow-y-scroll scroller-hide h-[calc(100vh-100px)] md:gap-5 md:flex-col md:flex md:justify-start md:pl-2">
           {person.map((p) => (
             <div key={p.id}>
-              <button>
+              <button className="md:flex md:gap-2 md:items-center">
                 <img
                   src={p.src}
                   alt={p.alt}
@@ -88,7 +96,7 @@ const HomePage = () => {
         </div>
       </div>
       <div className="col-span-4 md:col-span-2">
-        <div className="hidden">
+        <div className="hidden md:block">
           <Input type="text" placeholder="Search" Icon={Search} />
         </div>
         <div className="flex justify-between">
@@ -99,7 +107,7 @@ const HomePage = () => {
             <p className="text-lightText text-sm">Online</p>
             <p className="w-2 bg-online h-2 rounded-full"></p>
           </div>
-          <Link to="/profile">
+          <Link to="/profile" className="md:hidden">
             <User className="bg-primary rounded-full w-10 h-10 p-1" />
           </Link>
         </div>
@@ -111,16 +119,20 @@ const HomePage = () => {
               {messages.map((m) => (
                 <div key={m.id}>
                   {m.sender === "me" ? (
-                    <div className="bg-secondary py-3 rounded-full rounded-br-none w-full px-5">
-                      <p className="text-sm text-text w-full font-bold">
-                        {messages[1].message}
-                      </p>
+                    <div className="flex justify-end">
+                      <div className="bg-secondary py-3 rounded-full rounded-br-none w-full px-5 md:w-[50%] ">
+                        <p className="text-sm text-text w-full font-bold text-right ">
+                          {messages[1].message}
+                        </p>
+                      </div>
                     </div>
                   ) : (
-                    <div className="bg-white py-3 rounded-full rounded-bl-none w-full px-5">
-                      <p className="text-sm text-primary w-full text-bold">
-                        {messages[0].message}
-                      </p>
+                    <div className="flex justify-start">
+                      <div className="bg-white py-3 rounded-full rounded-bl-none w-full px-5 md:w-[50%]">
+                        <p className="text-sm text-primary w-full text-bold">
+                          {messages[0].message}
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -134,7 +146,7 @@ const HomePage = () => {
           )}
         </div>
         <div className="p-5 flex items-center gap-3 w-full">
-          <div>
+          <div className="w-full">
             <Input placeholder="Type Message..." type="text" />
           </div>
           <div>

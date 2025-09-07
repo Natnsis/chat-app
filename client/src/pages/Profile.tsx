@@ -3,7 +3,7 @@ import Button from "../components/Button";
 
 const Profile = () => {
   return (
-    <div className="h-screen w-screen p-5 flex-col gap-5 flex">
+    <div className="h-screen w-full p-5 flex-col gap-5 flex">
       <div className="flex w-full justify-center items-center">
         <img
           src="./people/aMan.png"

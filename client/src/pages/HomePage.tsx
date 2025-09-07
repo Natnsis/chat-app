@@ -80,7 +80,7 @@ const HomePage = () => {
         </div>
 
         {/* userLists */}
-        <div className="bg-tertiary  flex-col justify-center items-center overflow-y-scroll scroller-hide h-[calc(100vh-100px)] md:gap-5 md:flex-col md:flex md:justify-start md:pl-2">
+        <div className="bg-tertiary  flex-col justify-center items-center overflow-y-scroll scroller-hide h-[calc(100vh-100px)] md:gap-5 md:flex-col md:flex md:items-start md:pl-2">
           {person.map((p) => (
             <div key={p.id}>
               <button className="md:flex md:gap-2 md:items-center">

@@ -1,12 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// prisma/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
-  //output   = "../generated/prisma"
 }
 
 datasource db {
@@ -20,23 +15,27 @@ enum Status {
 }
 
 enum Seen {
-  HAVE
+  SEEN
   NOT
 }
 
 model User {
-  id String @unique @default(uuid())
-  name String
-  email String @unique
+  id       String    @unique @default(uuid())
+  name     String
+  email    String    @unique
   password String
-  sendMessages Message[] @relation("Sender")
-  receivedMessages Message[] @relation("Receiver")
+  url      String
+  status   Status
+  sentMessages      Message[] @relation("Sender")
+  receivedMessages  Message[] @relation("Receiver")
 }
 
 model Message {
-  id String @unique @default(uuid())
-  senderId String
-  receiverId String
-  sender User @relation("Sender", fields: [senderId], references: [id])
-  receiver User @relation("Receiver", fields: [receiverId], references: [id])
+  id          String @unique @default(uuid())
+  content     String
+  status      Seen
+  sender      User   @relation("Sender", fields: [senderId], references: [id])
+  senderId    String
+  receiver    User   @relation("Receiver", fields: [receiverId], references: [id])
+  receiverId  String
 }

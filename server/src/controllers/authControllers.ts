@@ -2,6 +2,14 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { v2 as cloudinary } from 'cloudinary';
+
+//cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 
 const prisma = new PrismaClient();
 
@@ -43,19 +51,22 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
-  const { name, email, password, url } = req.body;
+  const { name, email, password, imageBase64 } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
-    const register = await prisma.user.create({
+    const uploaded = await cloudinary.uploader.upload(imageBase64, {
+      folder: 'chat-app/users',
+    });
+    const new_user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        url,
+        url: uploaded.secure_url,
       },
     });
-    if (!register) return res.json('this is not registering');
-    return res.json(register);
+    if (!new_user) return res.json('this is not registering');
+    return res.json({ message: 'you have registered successfully' });
   } catch (e) {
     res.json('hello its not working');
   }

@@ -23,7 +23,7 @@ enum Seen {
 }
 
 model User {
-  id       String    @unique @default(uuid())
+  id       String    @id @default(uuid())
   name     String
   email    String    @unique
   password String
@@ -34,7 +34,7 @@ model User {
 }
 
 model Message {
-  id          String @unique @default(uuid())
+  id          String @id @default(uuid())
   content     String
   status      Seen
   sender      User   @relation("Sender", fields: [senderId], references: [id])

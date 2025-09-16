@@ -1,43 +1,38 @@
-import { useState } from "react";
-import { Mail, MessageSquare, Lock, UserPen } from "lucide-react";
-import Button from "../components/Button";
+import { MessageSquare, UserPen, Mail, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
-import Input from "../components/Input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { registerSchema, type RegisterType } from "../schemas/users";
+import { useAuthStore } from "../stores/authStore";
+import { useRef, useState } from "react"; // Added for file name display
 
 const RegisterPage = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterType>({
+    resolver: zodResolver(registerSchema),
+  });
+  const registerUser = useAuthStore((state) => state.register);
+  const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    let imageBase64 = "";
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      imageBase64 = await new Promise((resolve) => {
-        reader.onloadend = () => resolve(reader.result as string);
-      });
+      setFileName(file.name);
+    } else {
+      setFileName("");
     }
+  };
 
+  const OnSubmit = async (data: RegisterType) => {
     try {
-      const response = await fetch("http://localhost:3001/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          imageBase64,
-        }),
-      });
-
-      const data = await response.json();
-      console.log("Registered user:", data);
-    } catch (err) {
-      console.error("Registration failed:", err);
+      // The register method in the store now correctly handles the form data and file
+      await registerUser(data);
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -51,29 +46,40 @@ const RegisterPage = () => {
           Create Your Account
         </h1>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Input
-            placeholder="John Doe"
-            type="text"
-            Icon={UserPen}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Input
-            placeholder="example@gmail.com"
-            type="email"
-            Icon={Mail}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            placeholder="password123"
-            type="password"
-            Icon={Lock}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit(OnSubmit)}>
+          {/* Name */}
+          <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5 items-center">
+            <UserPen className="text-secondary" />
+            <input
+              type="text"
+              placeholder="John Doe"
+              className="outline-none placeholder-text w-full"
+              {...register("name")}
+            />
+          </div>
 
+          {/* Email */}
+          <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5 items-center">
+            <Mail className="text-secondary" />
+            <input
+              type="email"
+              placeholder="example@gmail.com"
+              className="outline-none placeholder-text w-full"
+              {...register("email")}
+            />
+          </div>
+          {/* Password */}
+          <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5 items-center">
+            <Lock className="text-secondary" />
+            <input
+              type="password"
+              placeholder="password123"
+              className="outline-none placeholder-text w-full"
+              {...register("password")}
+            />
+          </div>
+
+          {/* Profile Image */}
           <div className="flex flex-col space-y-2">
             <label className="text-text font-medium">
               Select Profile Image
@@ -83,7 +89,8 @@ const RegisterPage = () => {
                 type="file"
                 id="profile-image"
                 className="hidden"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                {...register("avatar", { onChange: onFileChange })}
+                ref={fileInputRef}
               />
               <label
                 htmlFor="profile-image"
@@ -92,14 +99,28 @@ const RegisterPage = () => {
                 <span>Choose File</span>
               </label>
               <span className="text-text text-sm">
-                {file ? file.name : "No file selected"}
+                {fileName || "No file chosen"}
               </span>
             </div>
+            {errors.avatar && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.avatar.message as string}
+              </p>
+            )}
           </div>
 
-          <Button text="Sign Up" type="submit" styles="mt-4" />
+          {/* Submit Button */}
+          <div className="flex justify-center items-center">
+            <button
+              type="submit"
+              className="bg-accent text-white font-bold rounded-full px-6 py-3 active:scale-95 transition duration:300 mt-4"
+            >
+              Sign Up
+            </button>
+          </div>
 
-          <p className="text-center text-text">
+          {/* Link to Login */}
+          <p className="text-center text-text mt-2">
             Already have an account?{" "}
             <Link className="text-primary font-bold" to="/login">
               Sign In

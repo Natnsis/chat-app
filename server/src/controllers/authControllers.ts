@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v2 as cloudinary } from 'cloudinary';
+import { UploadApiResponse } from 'cloudinary';
 
 //cloudinary configuration
 cloudinary.config({
@@ -10,6 +11,8 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY!,
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
+
+const storage = 
 
 const prisma = new PrismaClient();
 
@@ -51,23 +54,42 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
-  const { name, email, password, imageBase64 } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
   try {
-    const uploaded = await cloudinary.uploader.upload(imageBase64, {
-      folder: 'chat-app/users',
-    });
+    const { name, email, password } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    let imageUrl: string | null = null;
+
+    if (req.file) {
+      imageUrl = await new Promise<string>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'chat-app/users' },
+          (error: any, result: UploadApiResponse | undefined) => {
+            if (error || !result) {
+              console.error('Cloudinary upload error:', error);
+              return reject(error);
+            }
+            resolve(result.secure_url);
+          }
+        );
+        // Corrected: Non-null assertion (!) to tell TypeScript it's safe
+        stream.end(req.file!.buffer);
+      });
+    }
+
     const new_user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        url: uploaded.secure_url,
+        url: imageUrl,
       },
     });
-    if (!new_user) return res.json('this is not registering');
-    return res.json({ message: 'you have registered successfully' });
+
+    return res.json({ message: 'you have registered successfully', new_user });
   } catch (e) {
-    res.json('hello its not working');
+    console.error(e);
+    res.status(500).json({ message: 'Registration failed', error: e });
   }
 };

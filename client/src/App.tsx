@@ -1,7 +1,5 @@
 import { Menu, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
-import Button from "./components/Button";
-
 const App = () => {
   return (
     <div className="bg-gradient-to-bl from-primary to-transparent h-screen px-3 py-5">
@@ -38,8 +36,13 @@ const App = () => {
           seamless communication like never before
         </p>
       </div>
-
-      <Button text="Get Started" link="login" />
+      <div className="flex justify-center">
+        <Link to="/login">
+          <button className="bg-accent text-white font-bold rounded-full px-6 py-3 active:scale-95 transition duration:300 mt-4">
+            Get Started
+          </button>
+        </Link>
+      </div>
     </div>
   );
 };

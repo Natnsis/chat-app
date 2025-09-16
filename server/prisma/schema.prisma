@@ -27,7 +27,7 @@ model User {
   name     String
   email    String    @unique
   password String
-  url      String
+  url      String?
   status   Status?   @default(INACTIVE)
   sentMessages      Message[] @relation("Sender")
   receivedMessages  Message[] @relation("Receiver")

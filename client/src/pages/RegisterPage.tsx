@@ -4,8 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { registerSchema, type RegisterType } from "../schemas/users";
 import { useState } from "react";
+import { useAuthStore } from "../stores/authStore";
 
 const RegisterPage = () => {
+  const registerData = useAuthStore((state) => state.register);
+  const response = useAuthStore((state) => state.response);
   const [imageName, setImageName] = useState("No file chosen");
   const [image, setImage] = useState(null);
   const {
@@ -22,8 +25,8 @@ const RegisterPage = () => {
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("file", image);
-
-    console.log(formData);
+    await registerData(formData);
+    console.log(response);
   };
 
   const handleImage = (e) => {

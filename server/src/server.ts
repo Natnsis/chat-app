@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
@@ -15,7 +17,6 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 //routes
 app.use('/auth', authRoutes);
-const PORT = 3002;
-app.listen(3002, () => {
-  console.log(`🚀 Server ready at http://localhost:${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}`);
 });

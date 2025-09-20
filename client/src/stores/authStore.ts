@@ -16,6 +16,7 @@ type AuthStore = {
   token: string | null;
   user: TokenPayload | null;
   error: string | null;
+  response: any;
   login: (userData: LoginTypes) => Promise<void>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
@@ -37,6 +38,7 @@ export const useAuthStore = create<AuthStore>()(
       token: null,
       user: null,
       error: null,
+      response: null,
 
       login: async (userData: LoginTypes) => {
         try {
@@ -52,18 +54,11 @@ export const useAuthStore = create<AuthStore>()(
 
       register: async (userData: RegisterType) => {
         try {
-          const formData = new FormData();
-          formData.append("name", userData.name);
-          formData.append("email", userData.email);
-          formData.append("password", userData.password);
-          // Corrected: Use 'avatar' to match the form and Zod schema
-          if (userData.avatar) formData.append("avatar", userData.avatar[0]);
-
-          await api.post("/auth/register", formData, {
+          const response = await api.post("/auth/register", userData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
 
-          set({ error: null });
+          set({ response: response, error: null });
         } catch (err: any) {
           set({ error: err.response?.data?.message || err.message });
           throw err;

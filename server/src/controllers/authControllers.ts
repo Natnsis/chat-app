@@ -2,21 +2,10 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { v2 as cloudinary } from 'cloudinary';
-import { UploadApiResponse } from 'cloudinary';
-
-//cloudinary configuration
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-  api_key: process.env.CLOUDINARY_API_KEY!,
-  api_secret: process.env.CLOUDINARY_API_SECRET!,
-});
-
-const storage = 
 
 const prisma = new PrismaClient();
 
-//token generation and assigning
+// Token generation and assigning
 const generateToken = (userId: string) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_SECRET!, {
     expiresIn: '15m',
@@ -59,31 +48,11 @@ export const register = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    let imageUrl: string | null = null;
-
-    if (req.file) {
-      imageUrl = await new Promise<string>((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'chat-app/users' },
-          (error: any, result: UploadApiResponse | undefined) => {
-            if (error || !result) {
-              console.error('Cloudinary upload error:', error);
-              return reject(error);
-            }
-            resolve(result.secure_url);
-          }
-        );
-        // Corrected: Non-null assertion (!) to tell TypeScript it's safe
-        stream.end(req.file!.buffer);
-      });
-    }
-
     const new_user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        url: imageUrl,
       },
     });
 

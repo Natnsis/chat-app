@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { registerSchema, type RegisterType } from "../schemas/users";
-import { useAuthStore } from "../stores/authStore";
-import { useRef, useState } from "react"; // Added for file name display
+import { useState } from "react";
 
 const RegisterPage = () => {
+  const [imageName, setImageName] = useState("No file chosen");
+  const [image, setImage] = useState(null);
   const {
     register,
     handleSubmit,
@@ -14,26 +15,21 @@ const RegisterPage = () => {
   } = useForm<RegisterType>({
     resolver: zodResolver(registerSchema),
   });
-  const registerUser = useAuthStore((state) => state.register);
-  const [fileName, setFileName] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFileName(file.name);
-    } else {
-      setFileName("");
-    }
-  };
 
   const OnSubmit = async (data: RegisterType) => {
-    try {
-      // The register method in the store now correctly handles the form data and file
-      await registerUser(data);
-    } catch (e) {
-      console.log(e);
-    }
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("file", image);
+
+    console.log(formData);
+  };
+
+  const handleImage = (e) => {
+    const image = e.target.files[0];
+    setImage(image);
+    setImageName(image.name);
   };
 
   return (
@@ -48,35 +44,51 @@ const RegisterPage = () => {
 
         <form className="flex flex-col gap-4" onSubmit={handleSubmit(OnSubmit)}>
           {/* Name */}
-          <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5 items-center">
-            <UserPen className="text-secondary" />
-            <input
-              type="text"
-              placeholder="John Doe"
-              className="outline-none placeholder-text w-full"
-              {...register("name")}
-            />
+          <div>
+            <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5 items-center">
+              <UserPen className="text-secondary" />
+              <input
+                type="text"
+                placeholder="John Doe"
+                className="outline-none placeholder-text w-full"
+                {...register("name")}
+              />
+            </div>
+            <p className="text-center text-red-400">
+              {errors && errors?.name?.message}
+            </p>
           </div>
 
           {/* Email */}
-          <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5 items-center">
-            <Mail className="text-secondary" />
-            <input
-              type="email"
-              placeholder="example@gmail.com"
-              className="outline-none placeholder-text w-full"
-              {...register("email")}
-            />
+          <div>
+            <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5 items-center">
+              <Mail className="text-secondary" />
+              <input
+                type="email"
+                placeholder="example@gmail.com"
+                className="outline-none placeholder-text w-full"
+                {...register("email")}
+              />
+            </div>
+            <p className="text-center text-red-400">
+              {errors && errors?.email?.message}
+            </p>
           </div>
+
           {/* Password */}
-          <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5 items-center">
-            <Lock className="text-secondary" />
-            <input
-              type="password"
-              placeholder="password123"
-              className="outline-none placeholder-text w-full"
-              {...register("password")}
-            />
+          <div>
+            <div className="flex gap-2 focus-within:ring-2 px-2 py-1 focus-within:ring-primary rounded-full border-b-1 focus-within:border-0 mb-5 items-center">
+              <Lock className="text-secondary" />
+              <input
+                type="password"
+                placeholder="password123"
+                className="outline-none placeholder-text w-full"
+                {...register("password")}
+              />
+            </div>
+            <p className="text-center text-red-400">
+              {errors && errors?.password?.message}
+            </p>
           </div>
 
           {/* Profile Image */}
@@ -89,8 +101,7 @@ const RegisterPage = () => {
                 type="file"
                 id="profile-image"
                 className="hidden"
-                {...register("avatar", { onChange: onFileChange })}
-                ref={fileInputRef}
+                onChange={handleImage}
               />
               <label
                 htmlFor="profile-image"
@@ -98,15 +109,8 @@ const RegisterPage = () => {
               >
                 <span>Choose File</span>
               </label>
-              <span className="text-text text-sm">
-                {fileName || "No file chosen"}
-              </span>
+              <span className="text-text text-sm">{imageName}</span>
             </div>
-            {errors.avatar && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.avatar.message as string}
-              </p>
-            )}
           </div>
 
           {/* Submit Button */}

@@ -15,9 +15,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 //routes
 app.use('/auth', authRoutes);
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
+const PORT = 3002;
+app.listen(3002, () => {
   console.log(`🚀 Server ready at http://localhost:${PORT}`);
 });

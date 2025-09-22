@@ -27,7 +27,7 @@ type AuthStore = {
 
 //axios api
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3001",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:4000",
   withCredentials: true,
 });
 
@@ -54,14 +54,14 @@ export const useAuthStore = create<AuthStore>()(
 
       register: async (userData: RegisterType) => {
         try {
-          const response = await api.post("/auth/register", userData, {
+          const res = await api.post("/auth/register", userData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
-
-          set({ response: response, error: null });
+          set({ response: res.data.message, error: null });
         } catch (err: any) {
-          set({ error: err.response?.data?.message || err.message });
-          throw err;
+          const errorMessage =
+            err.response?.data?.message || "An unexpected error occurred.";
+          set({ error: errorMessage });
         }
       },
 

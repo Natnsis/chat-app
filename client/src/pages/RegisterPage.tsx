@@ -5,12 +5,15 @@ import { useForm } from "react-hook-form";
 import { registerSchema, type RegisterType } from "../schemas/users";
 import { useState } from "react";
 import { useAuthStore } from "../stores/authStore";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const registerData = useAuthStore((state) => state.register);
   const response = useAuthStore((state) => state.response);
   const [imageName, setImageName] = useState("No file chosen");
   const [image, setImage] = useState(null);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,13 +23,16 @@ const RegisterPage = () => {
   });
 
   const OnSubmit = async (data: RegisterType) => {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("email", data.email);
     formData.append("password", data.password);
-    formData.append("file", image);
+    formData.append("image", image);
     await registerData(formData);
-    console.log(response);
+    setIsLoading(false);
+    alert("registration success");
+    navigate("/login");
   };
 
   const handleImage = (e) => {
@@ -120,9 +126,12 @@ const RegisterPage = () => {
           <div className="flex justify-center items-center">
             <button
               type="submit"
-              className="bg-accent text-white font-bold rounded-full px-6 py-3 active:scale-95 transition duration:300 mt-4"
+              className={`bg-accent text-white font-bold rounded-full px-6 py-3 active:scale-95 transition duration:300 mt-4 ${
+                isLoading ? "cursor-not-allowed" : " "
+              }`}
+              disabled={isLoading}
             >
-              Sign Up
+              {isLoading ? "Loading" : "SignIn"}
             </button>
           </div>
 

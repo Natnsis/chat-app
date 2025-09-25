@@ -8,7 +8,7 @@ export const getMessage = async (req: Request, res: Response) => {
     const { senderId } = req.body;
     const messages = await prisma.message.findMany({
       where: { receiverId, senderId },
-      orderBy: { createdAt },
+      orderBy: { createdAt: 'desc' },
     });
     return res.status(200).json(messages);
   } catch (e) {

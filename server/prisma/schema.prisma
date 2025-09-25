@@ -31,6 +31,7 @@ model User {
   status   Status?   @default(INACTIVE)
   sentMessages      Message[] @relation("Sender")
   receivedMessages  Message[] @relation("Receiver")
+  createdAt   DateTime @default(now())
 }
 
 model Message {
@@ -42,4 +43,5 @@ model Message {
   receiver    User   @relation("Receiver", fields: [receiverId], references: [id])
   receiverId  String
   createdAt   DateTime @default(now())
+
 }

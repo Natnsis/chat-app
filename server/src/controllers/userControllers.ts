@@ -5,7 +5,9 @@ const prisma = new PrismaClient();
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const users = await prisma.user.findMany({ orderBy: { createdAt } });
+    const users = await prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
     return res.status(200).json(users);
   } catch (e) {
     console.log(e);

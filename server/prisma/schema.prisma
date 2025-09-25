@@ -41,4 +41,5 @@ model Message {
   senderId    String
   receiver    User   @relation("Receiver", fields: [receiverId], references: [id])
   receiverId  String
+  createdAt   DateTime @default(now())
 }

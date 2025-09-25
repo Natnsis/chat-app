@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
+import messageRoutes from './routes/messageRoutes';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,6 +19,8 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 //routes
 app.use('/auth', authRoutes);
+app.use('/messages', messageRoutes);
+app.use('/users', userRoutes);
 app.listen(process.env.PORT, () => {
   console.log(`🚀 Server ready at http://localhost:${process.env.PORT}`);
 });

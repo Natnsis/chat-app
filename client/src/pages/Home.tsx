@@ -1,10 +1,9 @@
-import { Search, Send, User } from "lucide-react";
+import { Send, User } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Profile from "./Profile";
 
-const HomePage = () => {
-  const [chat, setChat] = useState<boolean>(true);
+const Home = () => {
   const [message, setMessage] = useState("");
 
   const person = [
@@ -132,35 +131,9 @@ const HomePage = () => {
 
         {/* Chat Box */}
         <div className="w-full h-[36rem] bg-chat p-5 rounded overflow-y-scroll scroller-hide">
-          {chat ? (
-            <div className="h-full overflow-y-scroll flex-col gap-5 flex">
-              {messages.map((m) => (
-                <div key={m.id}>
-                  {m.sender === "me" ? (
-                    <div className="flex justify-end">
-                      <div className="bg-secondary py-3 rounded-full rounded-br-none w-full px-5 md:w-[50%]">
-                        <p className="text-sm text-text w-full font-bold text-right">
-                          {m.message}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex justify-start">
-                      <div className="bg-white py-3 rounded-full rounded-bl-none w-full px-5 md:w-[50%]">
-                        <p className="text-sm text-primary w-full font-bold">
-                          {m.message}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="h-full flex justify-center items-center w-full text-text font-bold">
-              No Former Chat with this user
-            </div>
-          )}
+          <div className="w-full h-full flex items-center justify-center">
+            <p>No chat selected</p>
+          </div>
         </div>
 
         {/* Message input */}
@@ -192,4 +165,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Home;

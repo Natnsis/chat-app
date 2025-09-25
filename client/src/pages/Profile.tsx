@@ -5,7 +5,7 @@ const Profile = () => {
     <div className="h-screen w-full p-5 flex flex-col gap-5">
       <div className="flex w-full justify-center items-center">
         <img
-          src="./people/aMan.png"
+          src="/aMan.png"
           alt="profilePic"
           className="rounded-full h-60 w-60"
         />

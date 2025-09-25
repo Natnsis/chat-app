@@ -68,9 +68,9 @@ const HomePage = () => {
   return (
     <div className="grid grid-cols-5 p-5 gap-2 h-screen md:grid-cols-4">
       {/* Sidebar */}
-      <div className="col-span-1 space-y-3 h-full">
+      <div className="col-span-1 space-y-3 h-full flex flex-col">
         <h1 className="text-[1.3rem] font-bold">Chatter</h1>
-        <div className="bg-tertiary flex-col justify-center items-center overflow-y-scroll scroller-hide h-[calc(100vh-100px)] md:gap-5 md:flex-col md:flex md:items-start md:pl-2">
+        <div className="bg-tertiary overflow-y-scroll scroller-hide md:gap-5 md:flex-col md:flex md:items-start md:pl-2 flex-grow h-[3rem]">
           {person.map((p) => (
             <div key={p.id} className="mb-2">
               <button className="md:flex md:gap-2 md:items-center">

@@ -5,28 +5,43 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:4000",
 });
 
-type MessageData = {
+export type Message = {
+  id: string;
   senderId: string;
   receiverId: string;
   content: string;
+  createdAt: string;
 };
 
-type Chat = {
+export type Chat = {
   senderId: string;
   receiverId: string;
 };
 
-type UserStoreType = {
-  users: any[];
-  messages: Chat[];
-  response: null;
+export type UserOtherType = {
+  users: User[];
+  messages: Message[];
+  response: any;
+  user: User | null;
   getUsers: () => Promise<void>;
-  sendMessage: (data: MessageData) => Promise<void>;
+  getUser: (id: string) => Promise<void>;
+  sendMessage: (data: Message) => Promise<void>;
   getMessage: (chat: Chat) => Promise<void>;
 };
 
-export const useUsersStore = create<UserStoreType>((set, get) => ({
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  url: string;
+  status: string;
+  createdAt: string;
+};
+
+export const useOtherStore = create<UserOtherType>((set, get) => ({
   users: [],
+  user: null,
   messages: [],
   response: null,
 
@@ -35,7 +50,7 @@ export const useUsersStore = create<UserStoreType>((set, get) => ({
     set({ users: res.data });
   },
 
-  sendMessage: async (data: MessageData) => {
+  sendMessage: async (data: Message) => {
     const res = await api.post("/message/send", data);
     set({ response: res.data });
   },
@@ -43,5 +58,10 @@ export const useUsersStore = create<UserStoreType>((set, get) => ({
   getMessage: async (chat: Chat) => {
     const res = await api.post("/message/get", chat);
     set({ messages: res.data });
+  },
+
+  getUser: async (id: string) => {
+    const res = await api.get(`/users/${id}`);
+    set({ user: res.data });
   },
 }));

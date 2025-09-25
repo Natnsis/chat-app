@@ -1,9 +1,16 @@
 import { Send, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Profile from "./Profile";
+import { useOtherStore } from "../stores/otherStore";
 
 const Home = () => {
+  const getUsers = useOtherStore((state) => state.getUsers);
+  const users = useOtherStore((state) => state.users) as User[];
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
+  console.log(users);
   const [message, setMessage] = useState("");
 
   const person = [
@@ -99,13 +106,13 @@ const Home = () => {
       {/* Sidebar */}
       <div className="col-span-1 space-y-3 h-full flex flex-col">
         <h1 className="text-[1.3rem] font-bold">Chatter</h1>
-        <div className="bg-tertiary overflow-y-scroll scroller-hide md:gap-5 md:flex-col md:flex md:items-start md:pl-2 flex-grow h-[3rem]">
-          {person.map((p) => (
-            <div key={p.id} className="mb-2">
-              <button className="md:flex md:gap-2 md:items-center">
+        <div className="bg-tertiary overflow-y-scroll scroller-hide md:gap-5 md:flex-col md:flex md:items-start md:pl-2 flex-grow h-[3rem] px-2">
+          {users.map((p) => (
+            <div key={p.id} className="mb-2 w-full">
+              <button className="md:flex md:gap-2 md:items-center border-1 px-3 rounded-lg py-2 w-full">
                 <img
-                  src={p.src}
-                  alt={p.alt}
+                  src={p.url}
+                  alt="user_image"
                   className="rounded-full w-15 h-15"
                 />
                 <p className="text-lightText font-bold">{p.name}</p>

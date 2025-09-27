@@ -1,8 +1,9 @@
 import { Send, User } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Profile from "./Profile";
 import { useOtherStore } from "../stores/otherStore";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const getUsers = useOtherStore((state) => state.getUsers);
@@ -11,20 +12,7 @@ const Home = () => {
     getUsers();
   }, [getUsers]);
   console.log(users);
-  const [message, setMessage] = useState("");
-
-  const person = [
-    { id: 1, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 2, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-    { id: 3, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 4, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-    { id: 5, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 6, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-    { id: 7, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 8, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-    { id: 9, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 10, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-  ];
+  const navigate = useNavigate();
 
   const messages = [
     {
@@ -109,7 +97,10 @@ const Home = () => {
         <div className="bg-tertiary overflow-y-scroll scroller-hide md:gap-5 md:flex-col md:flex md:items-start md:pl-2 flex-grow h-[3rem] px-2">
           {users.map((p) => (
             <div key={p.id} className="mb-2 w-full">
-              <button className="md:flex md:gap-2 md:items-center border-1 px-3 rounded-lg py-2 w-full">
+              <button
+                onClick={() => navigate(`/home/${p.id}`)}
+                className="md:flex md:gap-2 md:items-center border-1 px-3 rounded-lg py-2 w-full"
+              >
                 <img
                   src={p.url}
                   alt="user_image"
@@ -150,8 +141,6 @@ const Home = () => {
               <input
                 type="text"
                 placeholder="Type Message..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
                 className="outline-none w-full placeholder-text bg-transparent"
               />
             </div>

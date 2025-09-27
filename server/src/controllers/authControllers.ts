@@ -77,3 +77,14 @@ export const register = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Registration failed', error: e });
   }
 };
+
+export const logout = (req: Request, res: Response) => {
+  try {
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+    });
+    res.status(200).json({ message: 'logged out successfully' });
+  } catch (e) {
+    console.log(e);
+  }
+};

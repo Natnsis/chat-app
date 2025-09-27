@@ -1,112 +1,42 @@
-import { Search, Send, User } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Send, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import Profile from "./Profile";
+import { useOtherStore } from "../stores/otherStore";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-  const [chat, setChat] = useState<boolean>(true);
-  const [message, setMessage] = useState("");
+  const { id } = useParams();
+  const getUsers = useOtherStore((state) => state.getUsers);
+  const users = useOtherStore((state) => state.users) as User[];
+  const getPartner = useOtherStore((state) => state.getPartner);
+  const partner = useOtherStore((state) => state.partner) as User;
+  useEffect(() => {
+    getUsers();
+    if (id) {
+      getPartner(id);
+    }
+  }, [getUsers, getPartner, id]);
 
-  const person = [
-    { id: 1, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 2, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-    { id: 3, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 4, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-    { id: 5, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 6, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-    { id: 7, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 8, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-    { id: 9, src: "/aMan.png", alt: "userImg", name: "Natnael" },
-    { id: 10, src: "/aWoman.png", alt: "userImg", name: "Melat" },
-  ];
-
-  const messages = [
-    {
-      id: 1,
-      sender: "me",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 2,
-      sender: "no",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 3,
-      sender: "me",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 4,
-      sender: "no",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 5,
-      sender: "me",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 6,
-      sender: "no",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 7,
-      sender: "no",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 7,
-      sender: "no",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 7,
-      sender: "no",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 7,
-      sender: "no",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 7,
-      sender: "no",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-    {
-      id: 7,
-      sender: "no",
-      message: "hi there i was here for some chat",
-      status: "active",
-    },
-  ];
+  console.log(users);
+  const navigate = useNavigate();
+  console.log(id);
 
   return (
     <div className="grid grid-cols-5 p-5 gap-2 h-screen md:grid-cols-4">
       {/* Sidebar */}
       <div className="col-span-1 space-y-3 h-full flex flex-col">
         <h1 className="text-[1.3rem] font-bold">Chatter</h1>
-        <div className="bg-tertiary overflow-y-scroll scroller-hide md:gap-5 md:flex-col md:flex md:items-start md:pl-2 flex-grow h-[3rem]">
-          {person.map((p) => (
-            <div key={p.id} className="mb-2">
-              <button className="md:flex md:gap-2 md:items-center">
+        <div className="bg-tertiary overflow-y-scroll scroller-hide md:gap-5 md:flex-col md:flex md:items-start md:pl-2 flex-grow h-[3rem] px-2">
+          {users.map((p) => (
+            <div key={p.id} className="mb-2 w-full">
+              <button
+                onClick={() => navigate(`/home/${p.id}`)}
+                className="md:flex md:gap-2 md:items-center border-1 px-3 rounded-lg py-2 w-full"
+              >
                 <img
-                  src={p.src}
-                  alt={p.alt}
+                  src={p.url}
+                  alt="user_image"
                   className="rounded-full w-15 h-15"
                 />
                 <p className="text-lightText font-bold">{p.name}</p>
@@ -121,7 +51,9 @@ const HomePage = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-2">
           <div className="flex items-center gap-2 pl-5">
-            <p className="text-text font-bold text-xl">Natnael Sisay</p>
+            <p className="text-text font-bold text-xl capitalize">
+              {partner ? partner.name : "No chat selected"}
+            </p>
             <p className="text-lightText text-sm">Online</p>
             <p className="w-2 bg-online h-2 rounded-full"></p>
           </div>
@@ -132,35 +64,9 @@ const HomePage = () => {
 
         {/* Chat Box */}
         <div className="w-full h-[36rem] bg-chat p-5 rounded overflow-y-scroll scroller-hide">
-          {chat ? (
-            <div className="h-full overflow-y-scroll flex-col gap-5 flex">
-              {messages.map((m) => (
-                <div key={m.id}>
-                  {m.sender === "me" ? (
-                    <div className="flex justify-end">
-                      <div className="bg-secondary py-3 rounded-full rounded-br-none w-full px-5 md:w-[50%]">
-                        <p className="text-sm text-text w-full font-bold text-right">
-                          {m.message}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex justify-start">
-                      <div className="bg-white py-3 rounded-full rounded-bl-none w-full px-5 md:w-[50%]">
-                        <p className="text-sm text-primary w-full font-bold">
-                          {m.message}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="h-full flex justify-center items-center w-full text-text font-bold">
-              No Former Chat with this user
-            </div>
-          )}
+          <div className="w-full h-full flex items-center justify-center">
+            <p>No chat selected</p>
+          </div>
         </div>
 
         {/* Message input */}
@@ -170,8 +76,6 @@ const HomePage = () => {
               <input
                 type="text"
                 placeholder="Type Message..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
                 className="outline-none w-full placeholder-text bg-transparent"
               />
             </div>

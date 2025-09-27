@@ -23,10 +23,12 @@ export type UserOtherType = {
   messages: Message[];
   response: any;
   user: User | null;
+  partner: User | null;
   getUsers: () => Promise<void>;
   getUser: (id: string) => Promise<void>;
   sendMessage: (data: Message) => Promise<void>;
   getMessage: (chat: Chat) => Promise<void>;
+  getPartner: (id: string) => Promise<void>;
 };
 
 export type User = {
@@ -44,6 +46,7 @@ export const useOtherStore = create<UserOtherType>((set, get) => ({
   user: null,
   messages: [],
   response: null,
+  partner: null,
 
   getUsers: async () => {
     const res = await api.get("/users");
@@ -63,5 +66,9 @@ export const useOtherStore = create<UserOtherType>((set, get) => ({
   getUser: async (id: string) => {
     const res = await api.get(`/users/${id}`);
     set({ user: res.data });
+  },
+  getPartner: async (id: string) => {
+    const res = await api.get(`/users/${id}`);
+    set({ partner: res.data });
   },
 }));

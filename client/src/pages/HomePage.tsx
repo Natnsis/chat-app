@@ -4,6 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import Profile from "./Profile";
 import { useOtherStore } from "../stores/otherStore";
 import { useNavigate } from "react-router-dom";
+import { socket } from "../socket";
+import { useAuthStore } from "../stores/authStore";
 
 const HomePage = () => {
   const { id } = useParams();
@@ -11,6 +13,9 @@ const HomePage = () => {
   const users = useOtherStore((state) => state.users) as User[];
   const getPartner = useOtherStore((state) => state.getPartner);
   const partner = useOtherStore((state) => state.partner) as User;
+  const sender = useAuthStore((state) => state.user) as User;
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState("");
   useEffect(() => {
     getUsers();
     if (id) {
@@ -18,9 +23,29 @@ const HomePage = () => {
     }
   }, [getUsers, getPartner, id]);
 
-  console.log(users);
+  useEffect(() => {
+    if (!id) return;
+    //getting messages for this partner
+    socket.emit("messages", { senderId: sender.id, receiverId: id });
+
+    //listen to messages
+    socket.on("messages", (msg) => setMessages(msg));
+    socket.on("receive message", (msg) =>
+      setMessages((prev) => [...prev, msg])
+    );
+  });
+
+  const sendMessage = () => {
+    if (!message.trim()) return;
+    socket.emit("send message", {
+      senderId: sender.id,
+      receiverId: id,
+      content: message,
+    });
+    setMessage("");
+  };
+
   const navigate = useNavigate();
-  console.log(id);
 
   return (
     <div className="grid grid-cols-5 p-5 gap-2 h-screen md:grid-cols-4">
@@ -63,17 +88,30 @@ const HomePage = () => {
         </div>
 
         {/* Chat Box */}
-        <div className="w-full h-[36rem] bg-chat p-5 rounded overflow-y-scroll scroller-hide">
-          <div className="w-full h-full flex items-center justify-center">
-            <p>No chat selected</p>
-          </div>
+        {/* Chat Box */}
+        <div className="w-full h-[36rem] bg-chat p-5 rounded overflow-y-scroll scroller-hide flex flex-col gap-2">
+          {messages.length === 0 && <p>No chat selected</p>}
+          {messages.map((m, i) => (
+            <div
+              key={i}
+              className={`p-2 rounded ${
+                m.senderId === sender.id
+                  ? "bg-primary text-white self-end"
+                  : "bg-tertiary"
+              }`}
+            >
+              {m.content}
+            </div>
+          ))}
         </div>
 
-        {/* Message input */}
+        {/* Message Input */}
         <div className="p-5 flex items-center gap-3 w-full">
           <div className="w-full">
             <div className="flex items-center gap-2 border rounded-full px-3 py-1 focus-within:ring-2 focus-within:ring-primary">
               <input
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 type="text"
                 placeholder="Type Message..."
                 className="outline-none w-full placeholder-text bg-transparent"
@@ -81,7 +119,7 @@ const HomePage = () => {
             </div>
           </div>
           <div>
-            <button>
+            <button onClick={sendMessage}>
               <Send className="bg-accent text-white w-8 h-8 p-2 rounded-full" />
             </button>
           </div>

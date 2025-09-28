@@ -11,7 +11,6 @@ const Home = () => {
   useEffect(() => {
     getUsers();
   }, [getUsers]);
-  console.log(users);
   const navigate = useNavigate();
 
   const messages = [
@@ -116,12 +115,7 @@ const Home = () => {
       {/* Chat Section */}
       <div className="col-span-4 md:col-span-2">
         {/* Header */}
-        <div className="flex justify-between items-center mb-2">
-          <div className="flex items-center gap-2 pl-5">
-            <p className="text-text font-bold text-xl">Natnael Sisay</p>
-            <p className="text-lightText text-sm">Online</p>
-            <p className="w-2 bg-online h-2 rounded-full"></p>
-          </div>
+        <div className="flex justify-end items-center mb-2">
           <Link to="/profile" className="md:hidden">
             <User className="bg-primary rounded-full w-10 h-10 p-1" />
           </Link>

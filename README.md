@@ -44,6 +44,6 @@ This app focuses on simplicity: users get registered automatically, choose a cha
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/your-chat-app.git
+git clone https://github.com/Natnsis/chat-app.git
 cd chat-app
 ```

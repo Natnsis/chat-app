@@ -12,6 +12,7 @@ const Home = () => {
     getUsers();
   }, [getUsers]);
   const navigate = useNavigate();
+  console.log(users);
 
   const messages = [
     {
